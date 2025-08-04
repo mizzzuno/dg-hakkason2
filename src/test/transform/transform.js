@@ -5,19 +5,25 @@ const path = require('path');
 function transform_init(){
   const orders = transformOrders();
   const monthlyOrders = getMonthlyOrders(orders);
-  const monthlyPriceByUser = getMonthlyPriceByUser(monthlyOrders);
-  
+ return monthlyOrders;
 }
 
 //チャートと円グラフで使用するデータ
-function transformToChart() { // getJson関数もインポートする場合は同じファイルから
-  const monthlyPriceByUser = transform_init();
+function transformToHL() { // getJson関数もインポートする場合は同じファイルから
+  const monthlyOrders = transform_init();
+  const monthlyPriceByUser = getMonthlyPriceByUser(monthlyOrders);
   const monthlySumPriceByUser = getMonthlySumPriceByUser(monthlyPriceByUser);
   const monthlySortedUser = sortMonthlyUser(monthlySumPriceByUser);
   console.log(monthlySortedUser); // --- IGNOR
+  console.log(monthlyPriceByUser); // --- IGNORE
   return monthlySortedUser;
 }
 
+function transformToR(){
+    const monthlyOrders = transform_init();
+    const getLatestOrders= getLatestOrders(monthlyOrders);
+    console.log(monthlyOrders); // --- IGNORE
+}
 
 // raw dataを適切なjsonに変換する
 function transformOrders() {
@@ -170,5 +176,5 @@ function sortMonthlyUser(monthlySumPriceByUser) {
 // テスト実行
 
 if (require.main === module) {
-  transformToChart();
+  transformToR();
 }

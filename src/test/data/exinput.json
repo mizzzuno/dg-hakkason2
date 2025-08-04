@@ -1,9 +1,9 @@
 {
   "default": {
-    "super_heavy": [0, 2000],
-    "heavy": [2000, 1000],
-    "light": [1000, 500],
-    "super_light": [500, 0]
+    "super_heavy": [2000,0],
+    "heavy": [1000, 2000],
+    "light": [500, 1000],
+    "super_light": [0, 500]
   },
   "current": {
     "super_heavy": [2000,0],
