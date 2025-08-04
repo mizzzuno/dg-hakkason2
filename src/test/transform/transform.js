@@ -9,7 +9,8 @@ function transformToHL() { // getJson関数もインポートする場合は同�
   const monthlyPriceByUser = getMonthlyPriceByUser(monthlyOrders);
   const monthlySumPriceByUser = getMonthlySumPriceByUser(monthlyPriceByUser);
   const monthlySortedUser = sortMonthlyUser(monthlySumPriceByUser);
-  console.log(monthlySortedUser); // --- IGNOR
+  console.log(monthlySortedUser); // --- IGNORE
+  postResultsHL(monthlySortedUser); // 結果をファイルに保存
   return monthlySortedUser;
 }
 
@@ -18,6 +19,8 @@ function transformToR(){
     const userDays= getLatestOrders(orders);
     const sectionCount= sortUserDays(userDays);
     console.log(sectionCount); // --- IGNORE
+    postResultsR(sectionCount); // 結果をファイルに保存
+    return sectionCount;
 }
 
 // raw dataを適切なjsonに変換する
@@ -79,7 +82,6 @@ function getIndicatorHL(){
   const filePath = path.join(__dirname, '../data/exinput.json');
   const jsonData = fs.readFileSync(filePath, 'utf8');
   const indicatorHL = JSON.parse(jsonData)["current"];
-  console.log(indicatorHL);
   return indicatorHL;
 }
 
@@ -87,8 +89,19 @@ function getIndicatorR(){
   const filePath = path.join(__dirname, '../data/exremove.json');
   const jsonData = fs.readFileSync(filePath, 'utf8');
   const indicatorR = JSON.parse(jsonData)["current"];
-  console.log(indicatorR);
   return indicatorR;
+}
+
+function postResultsHL(monthlySortedUser) {
+  const filePath = path.join(__dirname, '../data/hl_results.json');
+  fs.writeFileSync(filePath, JSON.stringify(monthlySortedUser, null, 2));
+  console.log("HL results saved to", filePath);
+}
+
+function postResultsR(sectionCount) {
+  const filePath = path.join(__dirname, '../data/r_results.json');
+  fs.writeFileSync(filePath, JSON.stringify(sectionCount, null, 2));
+  console.log("R results saved to", filePath);
 }
 
 //月別の注文をまとめる関数
@@ -227,5 +240,6 @@ function sortUserDays(userDays) {
 // テスト実行
 
 if (require.main === module) {
-  transformToR();
+  transformToHL();
+  transformToR(); // --- IGNORE ---
 }
