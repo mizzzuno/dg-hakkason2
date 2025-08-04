@@ -1,28 +1,23 @@
 const fs = require('fs');
 const { get } = require('http');
 const path = require('path');
-//どの整形にも使う関数
-function transform_init(){
-  const orders = transformOrders();
-  const monthlyOrders = getMonthlyOrders(orders);
- return monthlyOrders;
-}
 
 //チャートと円グラフで使用するデータ
 function transformToHL() { // getJson関数もインポートする場合は同じファイルから
-  const monthlyOrders = transform_init();
+  const orders = transformOrders();
+  const monthlyOrders = getMonthlyOrders(orders);
   const monthlyPriceByUser = getMonthlyPriceByUser(monthlyOrders);
   const monthlySumPriceByUser = getMonthlySumPriceByUser(monthlyPriceByUser);
   const monthlySortedUser = sortMonthlyUser(monthlySumPriceByUser);
   console.log(monthlySortedUser); // --- IGNOR
-  console.log(monthlyPriceByUser); // --- IGNORE
   return monthlySortedUser;
 }
 
 function transformToR(){
-    const monthlyOrders = transform_init();
-    const getLatestOrders= getLatestOrders(monthlyOrders);
-    console.log(monthlyOrders); // --- IGNORE
+    const orders = transformOrders();
+    const userDays= getLatestOrders(orders);
+    const sectionCount= sortUserDays(userDays);
+    console.log(sectionCount); // --- IGNORE
 }
 
 // raw dataを適切なjsonに変換する
@@ -80,14 +75,21 @@ function getOrder(){
 
 
 
-function getIndicator(){
+function getIndicatorHL(){
   const filePath = path.join(__dirname, '../data/exinput.json');
   const jsonData = fs.readFileSync(filePath, 'utf8');
-  const indicator = JSON.parse(jsonData)["current"];
-  console.log(indicator);
-  return indicator;
+  const indicatorHL = JSON.parse(jsonData)["current"];
+  console.log(indicatorHL);
+  return indicatorHL;
 }
 
+function getIndicatorR(){
+  const filePath = path.join(__dirname, '../data/exremove.json');
+  const jsonData = fs.readFileSync(filePath, 'utf8');
+  const indicatorR = JSON.parse(jsonData)["current"];
+  console.log(indicatorR);
+  return indicatorR;
+}
 
 //月別の注文をまとめる関数
 function getMonthlyOrders(orders) {
@@ -138,7 +140,7 @@ function getMonthlySumPriceByUser(monthlyPriceByUser) {
 
 //ヘビーユーザーのソートと人数のカウント
 function sortMonthlyUser(monthlySumPriceByUser) {
-  const indicators = getIndicator();
+  const indicatorHL = getIndicatorHL();
   // ステータス判定関数
   function getStatus(total, config) {
     for (const [status, range] of Object.entries(config)) {
@@ -163,7 +165,7 @@ function sortMonthlyUser(monthlySumPriceByUser) {
     };
     for (const userId in monthlySumPriceByUser[month]) {
       const total = monthlySumPriceByUser[month][userId];
-      const status = getStatus(total, indicators);
+      const status = getStatus(total, indicatorHL);
       if (status) {
         statusStats[status].count++;
         statusStats[status].total += total;
@@ -172,6 +174,55 @@ function sortMonthlyUser(monthlySumPriceByUser) {
     monthlySortedUser[month] = statusStats;
   }
   return monthlySortedUser;
+}
+
+function getLatestOrders(orders) {
+  // orders: 注文配列
+  const userLatest = {};
+  orders.forEach(order => {
+    const userId = order.customer.id;
+    if (!userLatest[userId] || order.orderAt > userLatest[userId].orderAt) {
+      userLatest[userId] = order;
+    }
+  });
+  // 日数計算（2024年12月1日0時0分0秒に固定）最新データがそこ
+  const now = new Date('2024-12-31T23:59:59+09:00').getTime();
+  const userDays = {};
+  for (const userId in userLatest) {
+    const orderAt = userLatest[userId].orderAt;
+    const days = Math.floor((now - orderAt) / (1000 * 60 * 60 * 24));
+    userDays[userId] = days;
+  }
+  return userDays;
+}
+
+
+function sortUserDays(userDays) {
+  const indicatorR = getIndicatorR();
+  // 区分判定関数
+  function getSection(days, config) {
+    for (const [section, range] of Object.entries(config)) {
+      const [min, max] = range;
+      if (max === 0) {
+        if (days >= min) return section;
+      } else {
+        if (days >= min && days < max) return section;
+      }
+    }
+    return null;
+  }
+
+  const sectionCount = {};
+  // 初期化
+  for (const section in indicatorR) {
+    sectionCount[section] = 0;
+  }
+  for (const userId in userDays) {
+    const days = userDays[userId];
+    const section = getSection(days, indicatorR);
+    if (section) sectionCount[section]++;
+  }
+  return sectionCount;
 }
 // テスト実行
 

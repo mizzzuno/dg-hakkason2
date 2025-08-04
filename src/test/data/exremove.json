@@ -1,13 +1,13 @@
 {"dauflult":{
-    "first":[40,0],
-    "second":[30,40],
-    "third":[20,30],
-    "fourth":[0,20]
+    "first":[200,0],
+    "second":[100,200],
+    "third":[50,100],
+    "fourth":[0,50]
 },
 "current":{
-    "first":[40,0],
-    "second":[30,40],
-    "third":[20,30],
-    "fourth":[0,20]
+    "first":[200,0],
+    "second":[100,200],
+    "third":[50,100],
+    "fourth":[0,50]
 }
 }
