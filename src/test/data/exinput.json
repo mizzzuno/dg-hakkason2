@@ -1,0 +1,14 @@
+{
+  "default": {
+    "super_heavy": [0, 500000],
+    "heavy": [500000, 10000],
+    "light": [10000, 5000],
+    "super_light": [5000, 0]
+  },
+  "current": {
+    "super_heavy": [0, 500000],
+    "heavy": [500000, 10000],
+    "light": [10000, 5000],
+    "super_light": [5000, 0]
+  }
+}
