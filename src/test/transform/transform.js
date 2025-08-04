@@ -1,12 +1,21 @@
 const fs = require('fs');
+const { get } = require('http');
 const path = require('path');
-
-
-function transformToChart() { // getJson関数もインポートする場合は同じファイルから
+//どの整形にも使う関数
+function transform_init(){
   const orders = transformOrders();
   const monthlyOrders = getMonthlyOrders(orders);
   const monthlyPriceByUser = getMonthlyPriceByUser(monthlyOrders);
-  console.log(monthlyPriceByUser);
+  
+}
+
+//チャートと円グラフで使用するデータ
+function transformToChart() { // getJson関数もインポートする場合は同じファイルから
+  const monthlyPriceByUser = transform_init();
+  const monthlySumPriceByUser = getMonthlySumPriceByUser(monthlyPriceByUser);
+  const monthlySortedUser = sortMonthlyUser(monthlySumPriceByUser);
+  console.log(monthlySortedUser); // --- IGNOR
+  return monthlySortedUser;
 }
 
 
@@ -63,14 +72,13 @@ function getOrder(){
   return JSON.parse(jsonData);
 }
 
-function getPrice() {
-  return order.item?.price || 0;
-}
+
 
 function getIndicator(){
   const filePath = path.join(__dirname, '../data/exinput.json');
   const jsonData = fs.readFileSync(filePath, 'utf8');
   const indicator = JSON.parse(jsonData)["current"];
+  console.log(indicator);
   return indicator;
 }
 
@@ -107,9 +115,60 @@ function getMonthlyPriceByUser(monthlyOrders) {
   return monthlyPriceByUser;
 }
 
+//月ごとにユーザーごとの購入金額の合計
+function getMonthlySumPriceByUser(monthlyPriceByUser) {
+  const monthlySumPriceByUser = {};
+  for (const month in monthlyPriceByUser) {
+    monthlySumPriceByUser[month] = {};
+    for (const userId in monthlyPriceByUser[month]) {
+      const orders = monthlyPriceByUser[month][userId];
+      const totalPrice = orders.reduce((sum, order) => sum + (order.item?.price || 0), 0);
+      monthlySumPriceByUser[month][userId] = totalPrice;
+    }
+  }
+  return monthlySumPriceByUser;
+}
 
+
+//ヘビーユーザーのソートと人数のカウント
+function sortMonthlyUser(monthlySumPriceByUser) {
+  const indicators = getIndicator();
+  // ステータス判定関数
+  function getStatus(total, config) {
+    for (const [status, range] of Object.entries(config)) {
+      const [min, max] = range;
+      if (max === 0) {
+        if (total >= min) return status;
+      } else {
+        if (total >= min && total < max) return status;
+      }
+    }
+    return null;
+  }
+
+  const monthlySortedUser = {};
+  for (const month in monthlySumPriceByUser) {
+    // ステータスごとにカウントと合計金額
+    const statusStats = {
+      super_heavy: { count: 0, total: 0 },
+      heavy: { count: 0, total: 0 },
+      light: { count: 0, total: 0 },
+      super_light: { count: 0, total: 0 }
+    };
+    for (const userId in monthlySumPriceByUser[month]) {
+      const total = monthlySumPriceByUser[month][userId];
+      const status = getStatus(total, indicators);
+      if (status) {
+        statusStats[status].count++;
+        statusStats[status].total += total;
+      }
+    }
+    monthlySortedUser[month] = statusStats;
+  }
+  return monthlySortedUser;
+}
 // テスト実行
 
 if (require.main === module) {
-  getIndicator();
+  transformToChart();
 }
