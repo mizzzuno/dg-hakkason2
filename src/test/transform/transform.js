@@ -237,6 +237,11 @@ function sortUserDays(userDays) {
   }
   return sectionCount;
 }
+
+
+function getOrder(){
+  fetch("")
+}
 // テスト実行
 
 if (require.main === module) {
