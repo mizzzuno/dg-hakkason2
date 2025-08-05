@@ -1,0 +1,99 @@
+{
+    "meta": {
+        "version": "1.0.0",
+        "isSuccess": true,
+        "message": "Items retrieved successfully"
+    },
+    "items": [
+        {
+            "id": "item_0001_0001",
+            "appId": "app_0001",
+            "name": "伝説の剣",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/weapon.png",
+            "price": 1800,
+            "currency": "JPY",
+            "category": "weapon"
+        },
+        {
+            "id": "item_0001_0002",
+            "appId": "app_0001",
+            "name": "魔法の盾",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/armor.png",
+            "price": 1200,
+            "currency": "JPY",
+            "category": "armor"
+        },
+        {
+            "id": "item_0001_0003",
+            "appId": "app_0001",
+            "name": "神秘の石",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/material.png",
+            "price": 500,
+            "currency": "JPY",
+            "category": "material"
+        },
+        {
+            "id": "item_0001_0004",
+            "appId": "app_0001",
+            "name": "力のポーション",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/buff.png",
+            "price": 800,
+            "currency": "JPY",
+            "category": "buff"
+        },
+        {
+            "id": "item_0001_0005",
+            "appId": "app_0001",
+            "name": "ゴールドコイン",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/currency.png",
+            "price": 100,
+            "currency": "JPY",
+            "category": "currency"
+        },
+        {
+            "id": "item_0001_0006",
+            "appId": "app_0001",
+            "name": "炎の斧",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/weapon.png",
+            "price": 1600,
+            "currency": "JPY",
+            "category": "weapon"
+        },
+        {
+            "id": "item_0001_0007",
+            "appId": "app_0001",
+            "name": "竜の鱗",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/material.png",
+            "price": 900,
+            "currency": "JPY",
+            "category": "material"
+        },
+        {
+            "id": "item_0001_0008",
+            "appId": "app_0001",
+            "name": "防御の指輪",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/armor.png",
+            "price": 1100,
+            "currency": "JPY",
+            "category": "armor"
+        },
+        {
+            "id": "item_0001_0009",
+            "appId": "app_0001",
+            "name": "速度上昇薬",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/buff.png",
+            "price": 700,
+            "currency": "JPY",
+            "category": "buff"
+        },
+        {
+            "id": "item_0001_0010",
+            "appId": "app_0001",
+            "name": "魔法の水晶",
+            "imageUrl": "https://tjufwmnunr.ap-northeast-1.awsapprunner.com/image/item/material.png",
+            "price": 600,
+            "currency": "JPY",
+            "category": "material"
+        }
+    ]
+}
