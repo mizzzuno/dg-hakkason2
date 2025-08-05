@@ -239,9 +239,6 @@ function sortUserDays(userDays) {
 }
 
 
-function getOrder(){
-  fetch("")
-}
 // テスト実行
 
 if (require.main === module) {
